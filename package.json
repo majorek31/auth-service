@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node ./src"
+    "start": "node ./src",
+    "clear": "del prisma\\database.db"
   },
   "keywords": [],
   "author": "",
