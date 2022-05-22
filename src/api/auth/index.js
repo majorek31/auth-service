@@ -33,6 +33,14 @@ router.post('/register', async (req, res) => {
     if (!req.body.name || !req.body.password || !req.body.email)
         return res.sendStatus(400)
     try {
+        if (await prisma.user.findFirst({
+            where: {
+                name: req.body.name
+            }
+        }))
+            return res.json({
+                ECODE: "UEXISTS"
+            })
         user = await prisma.user.create({
             data: {
                 name: req.body.name,
