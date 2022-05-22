@@ -14,9 +14,14 @@ router.get('/login', async (req, res) => {
             }
         })
         if (!user)
-            res.sendStatus(404)
-        result = await bcrypt.compare(req.query.password, user.password)
-        console.log(result)
+            return res.sendStatus(404)
+        if (!await bcrypt.compare(req.query.password, user.password))
+            return res.sendStatus(404)
+        return res.json({
+            id: user.id,
+            name: user.name,
+            email: user.email
+        })
     } catch (err) {
         console.error(err)
         return res.sendStatus(500)
