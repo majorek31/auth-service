@@ -8,7 +8,7 @@ router.get('/login', async (req, res) => {
     if (!req.query.username || !req.query.password) 
         return res.sendStatus(400)
     try {
-        user = prisma.user.findFirst({
+        user = await prisma.user.findFirst({
             where: {
                 name: req.query.username
             }
