@@ -19,7 +19,17 @@ router.get('/login', async (req, res) => {
             return res.sendStatus(404)
         if (!await bcrypt.compare(req.query.password, user.password))
             return res.sendStatus(404)
+        expirationDate = new Date()
+        expirationDate.setDate(expirationDate.getDate() + config.sessionLength)
+        session = await prisma.session.create({
+            data: {
+                userId: user.id,
+                sessionId: crypto.randomUUID(),
+                expirationDate: expirationDate
+            }
+        })
         return res.json({
+            sessionId: session.sessionId,
             id: user.id,
             name: user.name,
             email: user.email
