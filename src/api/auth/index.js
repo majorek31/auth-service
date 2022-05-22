@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const bcrypt = require('bcrypt')
 const crypto = require('crypto')
+const config = require('../../../config.json')
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 
@@ -48,7 +49,17 @@ router.post('/register', async (req, res) => {
                 email: req.body.email
             }
         })
+        expirationDate = new Date()
+        expirationDate.setDate(expirationDate.getDate() + config.sessionLength)
+        session = await prisma.session.create({
+            data: {
+                userId: user.id,
+                sessionId: crypto.randomUUID(),
+                expirationDate: expirationDate
+            }
+        })
         return res.json({
+            sessionId: session.sessionId,
             id: user.id,
             name: user.name,
             email: user.email
