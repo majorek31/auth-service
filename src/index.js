@@ -1,7 +1,9 @@
 const express = require('express');
 const config = require('../config.json');
+const bodyparser = require('bodyparser');
 const app = express();
 
+app.use(bodyparser.urlencoded({extended: true}));
 app.use('/api', require('./api'))
 
 app.listen(config.port, (err) => {
