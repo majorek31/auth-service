@@ -23,4 +23,26 @@ router.get('/login', async (req, res) => {
     }
 })
 
+router.post('/register', async (req, res) => {
+    if (!req.body.name || !req.body.password || !req.body.email)
+        return res.sendStatus(400)
+    try {
+        user = await prisma.user.create({
+            data: {
+                name: req.body.name,
+                password: await bcrypt.hash(req.body.password, await bcrypt.genSalt(10)),
+                email: req.body.email
+            }
+        })
+        return res.json({
+            id: user.id,
+            name: user.name,
+            email: user.email
+        })
+    } catch (err) {
+        console.error(err)
+        return res.sendStatus(500)        
+    }
+})
+
 module.exports = router
