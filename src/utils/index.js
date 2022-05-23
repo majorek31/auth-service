@@ -19,6 +19,31 @@ isSessionValid = async (sessionId) => {
     }
 }
 
+getUserIdBySessionId = async (sessionId) => {
+    try {
+        session = await prisma.session.findFirst({
+            where: {
+                sessionId: sessionId
+            }
+        })
+        if (!session)
+            return 0
+        user = await prisma.user.findFirst({
+            where: {
+                id: session.userId
+            },
+            select: {
+                id: true
+            }
+        })
+        return user.id
+    } catch (err) {
+        console.error(err)
+        return 0
+    }
+}
+
 module.exports = {
-    isSessionValid
+    isSessionValid,
+    getUserIdBySessionId
 }
