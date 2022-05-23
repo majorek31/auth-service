@@ -10,7 +10,7 @@ isSessionValid = async (sessionId) => {
         })
         if (!session) 
             return false
-        if (session.expirationDate > Date.now())
+        if (session.expirationDate < Date.now())
             return false
         return true
     } catch (err) {
