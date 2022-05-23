@@ -48,10 +48,24 @@ router.get('/:post', async (req, res) => {
 router.post('/', async (req, res) => {
     if(!await utils.isSessionValid(req.headers.authorization))
         return res.sendStatus(403)
+    if (!req.body.title || !req.body.content || !req.body.tags)
+        return res.sendStatus(400)
     try {
-        
+        post = await prisma.post.create({
+            data: {
+                authorId: await utils.getUserIdBySessionId(req.headers.authorization),
+                title: req.body.title,
+                content: req.body.content,
+                tags: req.body.tags
+            }
+        })
+        return res.json({
+            id: post.id,
+            url: `http://localhost/api/posts/${post.id}`
+        })
     } catch (err) {
-        
+        console.error(err)
+        return res.sendStatus(500)
     }
 })
 
