@@ -45,5 +45,14 @@ router.get('/:post', async (req, res) => {
         return res.sendStatus(500)
     }
 })
+router.post('/', async (req, res) => {
+    if(!await utils.isSessionValid(req.headers.authorization))
+        return res.sendStatus(403)
+    try {
+        
+    } catch (err) {
+        
+    }
+})
 
 module.exports = router
